@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateTagRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        
+        $tagId = $this->route('tag')->id ?? $this->tag;
+
+        return [
+            'name' => ['required', 'string', 'max:50', 'unique:tags,name,' . $tagId],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'タグ名を入力してください',
+            'name.max'      => 'タグ名は50文字以内で入力してください',
+            'name.unique'   => 'そのタグ名は既に使用されています',
+        ];
+    }
+}
