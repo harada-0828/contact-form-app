@@ -13,11 +13,11 @@ class UpdateTagRequest extends FormRequest
 
     public function rules(): array
     {
-        
+
         $tagId = $this->route('tag')->id ?? $this->tag;
 
         return [
-            'name' => ['required', 'string', 'max:50', 'unique:tags,name,' . $tagId],
+            'name' => ['required', 'string', 'max:50', 'unique:tags,name,'.$tagId],
         ];
     }
 
@@ -25,8 +25,8 @@ class UpdateTagRequest extends FormRequest
     {
         return [
             'name.required' => 'タグ名を入力してください',
-            'name.max'      => 'タグ名は50文字以内で入力してください',
-            'name.unique'   => 'そのタグ名は既に使用されています',
+            'name.max' => 'タグ名は50文字以内で入力してください',
+            'name.unique' => 'そのタグ名は既に使用されています',
         ];
     }
 }

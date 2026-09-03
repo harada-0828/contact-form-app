@@ -12,6 +12,7 @@ class AdminTagController extends Controller
     public function store(StoreTagRequest $request)
     {
         Tag::create($request->validated());
+
         return redirect()->route('admin.index');
     }
 
@@ -23,12 +24,14 @@ class AdminTagController extends Controller
     public function update(UpdateTagRequest $request, Tag $tag)
     {
         $tag->update($request->validated());
+
         return redirect()->route('admin.index');
     }
-    
+
     public function destroy(Tag $tag)
     {
         $tag->delete();
+
         return redirect()->route('admin.index');
     }
 }

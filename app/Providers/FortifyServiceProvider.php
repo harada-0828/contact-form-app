@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
+use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Fortify\Fortify;
-use Laravel\Fortify\Contracts\CreatesNewUsers; 
-use App\Actions\Fortify\CreateNewUser;         
+
 class FortifyServiceProvider extends ServiceProvider
 {
     /**

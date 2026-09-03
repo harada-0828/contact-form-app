@@ -18,7 +18,7 @@ class ContactController extends Controller
     public function confirm(StoreContactRequest $request)
     {
         $validated = $request->validated();
-    
+
         $category = Category::find($validated['category_id']);
 
         return view('contact.confirm', compact('validated', 'category'));
@@ -32,14 +32,14 @@ class ContactController extends Controller
 
         Contact::create([
             'category_id' => $request->category_id,
-            'first_name'  => $request->first_name,
-            'last_name'   => $request->last_name,
-            'gender'      => $request->gender,
-            'email'       => $request->email,
-            'tel'         => $request->tel,
-            'address'     => $request->address,
-            'building'    => $request->building,
-            'detail'      => $request->detail,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'gender' => $request->gender,
+            'email' => $request->email,
+            'tel' => $request->tel,
+            'address' => $request->address,
+            'building' => $request->building,
+            'detail' => $request->detail,
         ]);
 
         return redirect()->route('contact.thanks');

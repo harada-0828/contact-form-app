@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -16,4 +17,3 @@ class UserSeeder extends Seeder
         ]);
     }
 }
-

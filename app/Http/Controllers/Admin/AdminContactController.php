@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Tag;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminContactController extends Controller
 {
-    
     public function index(Request $request)
     {
         $query = Contact::with(['category', 'tags']);
@@ -19,8 +18,8 @@ class AdminContactController extends Controller
         if ($keyword = $request->input('keyword')) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
-                ->orWhere('last_name', 'like', "%{$keyword}%")
-                ->orWhere('email', 'like', "%{$keyword}%");
+                    ->orWhere('last_name', 'like', "%{$keyword}%")
+                    ->orWhere('email', 'like', "%{$keyword}%");
             });
         }
 
@@ -45,7 +44,6 @@ class AdminContactController extends Controller
         return view('admin.index', compact('contacts', 'categories', 'tags'));
     }
 
-
     public function show(Contact $contact)
     {
         $contact->load(['category', 'tags']);
@@ -60,7 +58,7 @@ class AdminContactController extends Controller
         return redirect()->route('admin.index')->with('success', 'お問い合わせを削除しました。');
     }
 
-        public function export(Request $request): StreamedResponse
+    public function export(Request $request): StreamedResponse
     {
         $query = Contact::with(['category', 'tags']);
 
@@ -68,8 +66,8 @@ class AdminContactController extends Controller
         if ($keyword = $request->input('keyword')) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
-                  ->orWhere('last_name', 'like', "%{$keyword}%")
-                  ->orWhere('email', 'like', "%{$keyword}%");
+                    ->orWhere('last_name', 'like', "%{$keyword}%")
+                    ->orWhere('email', 'like', "%{$keyword}%");
             });
         }
         if ($gender = $request->input('gender')) {
@@ -86,7 +84,7 @@ class AdminContactController extends Controller
 
         $callback = function () use ($contacts) {
             $file = fopen('php://output', 'w');
-            
+
             // 文字化け防止のBOM
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
@@ -94,7 +92,7 @@ class AdminContactController extends Controller
             fputcsv($file, ['ID', '姓', '名', '性別', 'メールアドレス', '電話番号', '住所', '建物名', 'カテゴリ', '内容', '作成日時']);
 
             foreach ($contacts as $contact) {
-                $genderText = match ((int)$contact->gender) {
+                $genderText = match ((int) $contact->gender) {
                     1 => '男性',
                     2 => '女性',
                     3 => 'その他',
@@ -119,14 +117,14 @@ class AdminContactController extends Controller
             fclose($file);
         };
 
-        $filename = 'contacts_' . date('Ymd_His') . '.csv';
+        $filename = 'contacts_'.date('Ymd_His').'.csv';
 
         return response()->stream($callback, 200, [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename={$filename}",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename={$filename}",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ]);
     }
 }
