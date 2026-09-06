@@ -36,7 +36,7 @@ Route::middleware(['auth'])->group(function () {
     // お問い合わせタグ編集ページ
     Route::get('/admin/tags/{tag}/edit', [AdminTagController::class, 'edit'])->name('admin.tags.edit');
 
-    // ▼ 【ここを追加】タグ新規登録処理 ▼
+    // タグ新規登録処理 
     Route::post('/admin/tags', [AdminTagController::class, 'store'])->name('admin.tags.store');
 
     // タグ更新処理
@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
     // タグ削除処理
     Route::delete('/admin/tags/{tag}', [AdminTagController::class, 'destroy'])->name('admin.tags.destroy');
 
-    // ログアウト後 /login へリダイレクトさせる場合
+    // ログアウト後 /login へリダイレクト
     Route::post('/logout', function (Request $request) {
         Auth::guard('web')->logout();
         $request->session()->invalidate();
