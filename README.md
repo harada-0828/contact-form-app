@@ -1,66 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# COACHTECH お問い合わせフォーム (Contact form app)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 概要
+本アプリケーションは、Laravel 10.x および Laravel Sail 環境を用いた Traditional Web 構成のお問い合わせフォーム、管理画面（CSVエクスポート・タグCRUD機能）、および外部連携用REST API（V1）を備えたシステムです。
+厳格な開発プロセスおよびコード品質基準（PSR-12準拠、Laravel Pintによる自動整形等）に則って実装されており、堅牢なテストスイート（全50テスト・205アサーション、総合コードカバレッジ約76.5%）を完備しています。
 
-## About Laravel
+## ER図
+![ER図](ER.drawio.png)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 環境構築手順
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **リポジトリのクローンと移動**
+```bash
+git clone https://github.com/harada-0828/contact-form-app.git
+cd contact-form-app
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
 
-## Learning Laravel
+2. **環境変数の設定**
+`.env.example` をコピーして `.env` ファイルを作成します。
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```bash
+cp .env.example .env
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+※ `.env` ファイルを開き、データベース接続情報が以下の設定になっていることを確認してください。
 
-## Laravel Sponsors
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=sail
+DB_PASSWORD=password
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
 
-### Premium Partners
+**重要**: `DB_HOST` は localhost や 127.0.0.1 ではなく、Dockerコンテナ名である `mysql` を指定してください。
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+*(※Apple Silicon（M1/M2/M3 Mac）をお使いの方は、`compose.yaml` の `mysql` サービスに `platform: 'linux/amd64'` が設定されていることを確認してください)*
 
-## Contributing
+3. **Laravel Sail の起動とエイリアス設定**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+./vendor/bin/sail up -d
 
-## Code of Conduct
+# （任意）エイリアスの設定（Zshの場合）
+echo "alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'" >> ~/.zshrc
+exec $SHELL
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
 
-## Security Vulnerabilities
+4. **アプリケーションキーの生成**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+sail artisan key:generate
 
-## License
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. **データベースのマイグレーションと初期データ投入**
+
+```bash
+sail artisan migrate --seed
+
+```
+
+*(※既存のデータベースをリセットしたい場合は `sail artisan migrate:fresh --seed` を実行してください)*
+
+6. **フロントエンドの依存関係インストールとビルド**
+
+```bash
+sail npm install
+sail npm run dev
+
+```
+
+**注意**: `sail npm run dev` は開発サーバーを起動したままにしておく必要があります。
+
+7. **phpMyAdmin の追加（任意）**
+データベースを確認したい場合は、`compose.yaml` の `mysql` サービスの次に行を追加してください。
+
+```yaml
+phpmyadmin:
+  image: 'phpmyadmin:latest'
+  ports:
+    - '${FORWARD_PHPMYADMIN_PORT:-8080}:80'
+  environment:
+    PMA_HOST: mysql
+    PMA_USER: '${DB_USERNAME}'
+    PMA_PASSWORD: '${DB_PASSWORD}'
+  networks:
+    - sail
+  depends_on:
+    - mysql
+
+```
+
+8. **テストの実行**
+
+```bash
+sail artisan test
+
+```
+
+## シーディング仕様・テスト用ユーザ
+
+`sail artisan migrate --seed` を実行することで、以下の初期データおよびテストデータが自動的に投入されます。
+
+### 1. テスト用ユーザ (UserSeeder)
+
+管理画面へのログインおよびフロントエンド認証に使用します。
+
+* **ユーザ名**: Test User
+* **メールアドレス**: `test@example.com`
+* **パスワード**: `password`
+
+### 2. 初期データ・ダミーデータ構成 (DatabaseSeeder)
+
+以下の順番で各種シーダーが実行されます。
+
+* **CategorySeeder** (`categories` テーブル): 固定5件
+* 登録内容: 「商品のお届けについて」「商品の交換について」「商品トラブル」「ショップへのお問い合わせ」「その他」
+
+
+* **TagSeeder** (`tags` テーブル): 固定5件
+* 登録内容: 「質問」「要望」「不具合報告」「ご意見」「その他」
+
+
+* **ContactSeeder** (`contacts` / `contact_tag` テーブル):
+* Faker (`ja_JP`) を用いたリアルなダミーデータを **20件** 生成
+* カテゴリは既存の `categories` からランダムに選択され `category_id` に紐付けられます。
+* 各お問い合わせ（Contact）に対して、既存のタグからランダムに **1〜3件** が中間テーブル（`contact_tag`）に紐付けられます。
+
+
+
+## 使用技術
+
+* **OS**: Dockerが動作する任意のOS
+* **Backend**: PHP 8.2, Laravel 10.x (Sail)
+* **Database**: MySQL 8.0
+* **Webサーバー**: Nginx
+* **Frontend**: Vite, Tailwind CSS ^3.4.0, Alpine.js
+* **Development & Quality Tools**: Docker, Laravel Sail, phpMyAdmin, Laravel Pint
+
+## APIエンドポイント一覧 (V1)
+
+*認証不要（Sanctum未使用）のパブリックAPIです。*
+
+| メソッド | パス | 概要 |
+| --- | --- | --- |
+| `GET` | `/api/v1/contacts` | お問い合わせ一覧取得（検索・ページネーション対応） |
+| `GET` | `/api/v1/contacts/{id}` | お問い合わせ詳細取得 |
+| `POST` | `/api/v1/contacts` | お問い合わせ作成 |
+| `PUT` | `/api/v1/contacts/{id}` | お問い合わせ更新 |
+| `DELETE` | `/api/v1/contacts/{id}` | お問い合わせ削除 |
+
+## 開発環境URL
+
+* **アプリケーションURL**: `http://localhost`
+* **phpMyAdmin**: `http://localhost:8080` （追加している場合）
+
+## 作成者
+
+Harada Naoki
