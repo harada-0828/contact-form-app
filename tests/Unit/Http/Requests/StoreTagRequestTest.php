@@ -15,18 +15,18 @@ class StoreTagRequestTest extends TestCase
     /** @test */
     public function valid_data_passes_validation()
     {
-        $request = new StoreTagRequest();
+        $request = new StoreTagRequest;
         $validator = Validator::make(['name' => 'PHP'], $request->rules(), $request->messages());
-        
-        $this->assertTrue($validator->passes(), 'Validation failed: ' . json_encode($validator->errors()->all()));
+
+        $this->assertTrue($validator->passes(), 'Validation failed: '.json_encode($validator->errors()->all()));
     }
 
     /** @test */
     public function name_is_required()
     {
-        $request = new StoreTagRequest();
+        $request = new StoreTagRequest;
         $validator = Validator::make(['name' => ''], $request->rules(), $request->messages());
-        
+
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('name', $validator->errors()->messages());
     }
@@ -34,9 +34,9 @@ class StoreTagRequestTest extends TestCase
     /** @test */
     public function name_must_not_exceed_50_characters()
     {
-        $request = new StoreTagRequest();
+        $request = new StoreTagRequest;
         $validator = Validator::make(['name' => str_repeat('あ', 51)], $request->rules(), $request->messages());
-        
+
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('name', $validator->errors()->messages());
     }
@@ -46,9 +46,9 @@ class StoreTagRequestTest extends TestCase
     {
         Tag::factory()->create(['name' => 'Laravel']);
 
-        $request = new StoreTagRequest();
+        $request = new StoreTagRequest;
         $validator = Validator::make(['name' => 'Laravel'], $request->rules(), $request->messages());
-        
+
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('name', $validator->errors()->messages());
     }

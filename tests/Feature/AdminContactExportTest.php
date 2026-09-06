@@ -62,7 +62,7 @@ class AdminContactExportTest extends TestCase
         $response = $this->actingAs($user)->get('/contacts/export?keyword=山田');
 
         $response->assertStatus(200);
-        
+
         // StreamedResponseの場合は streamedContent() を使用する
         $content = $response->streamedContent();
 

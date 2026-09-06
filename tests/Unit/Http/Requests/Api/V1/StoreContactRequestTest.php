@@ -15,7 +15,8 @@ class StoreContactRequestTest extends TestCase
 
     protected function validate(array $data)
     {
-        $request = new StoreContactRequest();
+        $request = new StoreContactRequest;
+
         return Validator::make($data, $request->rules(), $request->messages());
     }
 
@@ -45,7 +46,7 @@ class StoreContactRequestTest extends TestCase
     {
         // 必須項目が空の場合のエラーテスト
         $validator = $this->validate([]);
-        
+
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('first_name', $validator->errors()->toArray());
         $this->assertArrayHasKey('last_name', $validator->errors()->toArray());

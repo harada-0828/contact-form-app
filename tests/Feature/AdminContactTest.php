@@ -61,7 +61,7 @@ class AdminContactTest extends TestCase
     public function 認証されたユーザーはお問い合わせ詳細ページを表示できること()
     {
         $user = User::factory()->create();
-        
+
         $category = Category::factory()->create([
             'content' => '商品について',
         ]);

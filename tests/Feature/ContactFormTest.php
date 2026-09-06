@@ -14,7 +14,7 @@ class ContactFormTest extends TestCase
     /** @test */
     public function お問い合わせ入力画面が表示されること()
     {
-        $response = $this->get('/'); 
+        $response = $this->get('/');
         $response->assertStatus(200);
     }
 
@@ -24,14 +24,14 @@ class ContactFormTest extends TestCase
         $response = $this->post('/contacts/confirm', []);
 
         $response->assertSessionHasErrors([
-            'first_name', 
-            'last_name', 
-            'email', 
-            'tel', 
-            'address', 
-            'category_id', 
-            'gender', 
-            'detail'
+            'first_name',
+            'last_name',
+            'email',
+            'tel',
+            'address',
+            'category_id',
+            'gender',
+            'detail',
         ]);
     }
 

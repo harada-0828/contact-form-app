@@ -15,7 +15,8 @@ class UpdateContactRequestTest extends TestCase
 
     protected function validate(array $data)
     {
-        $request = new UpdateContactRequest();
+        $request = new UpdateContactRequest;
+
         return Validator::make($data, $request->rules(), $request->messages());
     }
 
@@ -44,7 +45,7 @@ class UpdateContactRequestTest extends TestCase
     public function test_required_fields_fail_validation()
     {
         $validator = $this->validate([]);
-        
+
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('first_name', $validator->errors()->toArray());
         $this->assertArrayHasKey('last_name', $validator->errors()->toArray());

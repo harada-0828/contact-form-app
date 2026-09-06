@@ -18,7 +18,7 @@ class IndexContactRequestTest extends TestCase
         // 存在するカテゴリをあらかじめ作成する
         $category = Category::factory()->create();
 
-        $request = new IndexContactRequest();
+        $request = new IndexContactRequest;
         $data = [
             'keyword' => '山田',
             'gender' => '1',
@@ -33,7 +33,7 @@ class IndexContactRequestTest extends TestCase
     /** @test */
     public function invalid_gender_is_rejected()
     {
-        $request = new IndexContactRequest();
+        $request = new IndexContactRequest;
         $data = [
             'gender' => '99', // 不正な性別値
         ];

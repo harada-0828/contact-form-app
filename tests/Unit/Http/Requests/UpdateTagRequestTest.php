@@ -5,6 +5,7 @@ namespace Tests\Unit\Http\Requests;
 use App\Http\Requests\UpdateTagRequest;
 use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
 use Tests\TestCase;
 
@@ -18,12 +19,13 @@ class UpdateTagRequestTest extends TestCase
         $tag1 = Tag::factory()->create(['name' => 'PHP']);
         Tag::factory()->create(['name' => 'JavaScript']);
 
-        $request = new UpdateTagRequest();
-        
+        $request = new UpdateTagRequest;
+
         // FormRequestに対して直接ルートパラメータ（プレースホルダー）を設定する
         $request->setRouteResolver(function () use ($tag1) {
-            $route = new \Illuminate\Routing\Route('PUT', 'admin/tags/{tag}', []);
+            $route = new Route('PUT', 'admin/tags/{tag}', []);
             $route->parameters['tag'] = $tag1->id; // ここで直接IDを紐付ける
+
             return $route;
         });
 

@@ -36,7 +36,7 @@ Route::middleware(['auth'])->group(function () {
     // お問い合わせタグ編集ページ
     Route::get('/admin/tags/{tag}/edit', [AdminTagController::class, 'edit'])->name('admin.tags.edit');
 
-    // タグ新規登録処理 
+    // タグ新規登録処理
     Route::post('/admin/tags', [AdminTagController::class, 'store'])->name('admin.tags.store');
 
     // タグ更新処理

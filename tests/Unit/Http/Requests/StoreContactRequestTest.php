@@ -14,7 +14,8 @@ class StoreContactRequestTest extends TestCase
 
     protected function validateData(array $data)
     {
-        $request = new StoreContactRequest();
+        $request = new StoreContactRequest;
+
         return Validator::make($data, $request->rules(), $request->messages());
     }
 
@@ -43,7 +44,7 @@ class StoreContactRequestTest extends TestCase
     public function required_fields_are_required()
     {
         $validator = $this->validateData([]);
-        
+
         $this->assertTrue($validator->fails());
         $this->assertArrayHasKey('first_name', $validator->errors()->messages());
         $this->assertArrayHasKey('last_name', $validator->errors()->messages());

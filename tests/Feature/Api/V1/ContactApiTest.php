@@ -21,25 +21,25 @@ class ContactApiTest extends TestCase
         $response = $this->getJson('/api/v1/contacts');
 
         $response->assertStatus(200)
-                 ->assertJsonStructure([
-                     'data' => [
-                         '*' => [
-                             'id',
-                             'category', // category_id ではなく category
-                             'first_name',
-                             'last_name',
-                             'gender',
-                             'email',
-                             'tel',
-                             'address',
-                             'building',
-                             'detail',
-                             'tags',
-                             'created_at',
-                             'updated_at',
-                         ]
-                     ]
-                 ]);
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'category', // category_id ではなく category
+                        'first_name',
+                        'last_name',
+                        'gender',
+                        'email',
+                        'tel',
+                        'address',
+                        'building',
+                        'detail',
+                        'tags',
+                        'created_at',
+                        'updated_at',
+                    ],
+                ],
+            ]);
     }
 
     public function test_index_validation_fails_with_invalid_parameters()
@@ -47,10 +47,10 @@ class ContactApiTest extends TestCase
         $response = $this->getJson('/api/v1/contacts?gender=99&date=invalid-date');
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors(['gender', 'date']);
+            ->assertJsonValidationErrors(['gender', 'date']);
     }
 
-public function test_can_get_contact_detail()
+    public function test_can_get_contact_detail()
     {
         $category = Category::factory()->create();
         $contact = Contact::factory()->create([
@@ -60,13 +60,13 @@ public function test_can_get_contact_detail()
         $response = $this->getJson("/api/v1/contacts/{$contact->id}");
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'id' => $contact->id,
-                         'first_name' => $contact->first_name,
-                         'last_name' => $contact->last_name,
-                     ]
-                 ]);
+            ->assertJson([
+                'data' => [
+                    'id' => $contact->id,
+                    'first_name' => $contact->first_name,
+                    'last_name' => $contact->last_name,
+                ],
+            ]);
     }
 
     public function test_returns_404_when_contact_not_found()
@@ -76,9 +76,7 @@ public function test_can_get_contact_detail()
         $response->assertStatus(404);
     }
 
-
-
-public function test_can_create_contact()
+    public function test_can_create_contact()
     {
         $category = Category::factory()->create();
 
@@ -98,13 +96,13 @@ public function test_can_create_contact()
 
         // 作成成功時は201 Created
         $response->assertStatus(201)
-                 ->assertJson([
-                     'data' => [
-                         'first_name' => 'テスト',
-                         'last_name' => '太郎',
-                         'email' => 'create_test@example.com',
-                     ]
-                 ]);
+            ->assertJson([
+                'data' => [
+                    'first_name' => 'テスト',
+                    'last_name' => '太郎',
+                    'email' => 'create_test@example.com',
+                ],
+            ]);
 
         // データベースに保存されているか確認
         $this->assertDatabaseHas('contacts', [
@@ -118,18 +116,19 @@ public function test_can_create_contact()
         $response = $this->postJson('/api/v1/contacts', []);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors([
-                     'first_name',
-                     'last_name',
-                     'gender',
-                     'email',
-                     'tel',
-                     'address',
-                     'category_id',
-                     'detail',
-                 ]);
+            ->assertJsonValidationErrors([
+                'first_name',
+                'last_name',
+                'gender',
+                'email',
+                'tel',
+                'address',
+                'category_id',
+                'detail',
+            ]);
     }
-public function test_can_update_contact()
+
+    public function test_can_update_contact()
     {
         $category = Category::factory()->create();
         $contact = Contact::factory()->create([
@@ -154,11 +153,11 @@ public function test_can_update_contact()
         $response = $this->putJson("/api/v1/contacts/{$contact->id}", $data);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'first_name' => '変更後',
-                     ]
-                 ]);
+            ->assertJson([
+                'data' => [
+                    'first_name' => '変更後',
+                ],
+            ]);
 
         $this->assertDatabaseHas('contacts', [
             'id' => $contact->id,
@@ -187,19 +186,19 @@ public function test_can_update_contact()
         $response = $this->putJson("/api/v1/contacts/{$contact->id}", []);
 
         $response->assertStatus(422)
-                 ->assertJsonValidationErrors([
-                     'first_name',
-                     'last_name',
-                     'gender',
-                     'email',
-                     'tel',
-                     'address',
-                     'category_id',
-                     'detail',
-                 ]);
+            ->assertJsonValidationErrors([
+                'first_name',
+                'last_name',
+                'gender',
+                'email',
+                'tel',
+                'address',
+                'category_id',
+                'detail',
+            ]);
     }
 
-public function test_can_delete_contact()
+    public function test_can_delete_contact()
     {
         $category = Category::factory()->create();
         $contact = Contact::factory()->create([
@@ -223,5 +222,4 @@ public function test_can_delete_contact()
 
         $response->assertStatus(404);
     }
-
 }

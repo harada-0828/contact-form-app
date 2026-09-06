@@ -25,7 +25,7 @@ class IndexContactRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'gender.in' => '性別の値が不正です', 
+            'gender.in' => '性別の値が不正です',
         ];
     }
 }
