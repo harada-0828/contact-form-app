@@ -40,7 +40,18 @@ DB_PASSWORD=password
 
 *(※Apple Silicon（M1/M2/M3 Mac）をお使いの方は、`compose.yaml` の `mysql` サービスに `platform: 'linux/amd64'` が設定されていることを確認してください)*
 
-3. **Laravel Sail の起動とエイリアス設定**
+3. **Laravelパッケージのインストール**
+```
+docker run --rm \
+-u "$(id -u):$(id -g)" \
+-v "$(pwd):/var/www/html" \
+-w /var/www/html \
+laravelsail/php82-composer:latest \
+composer install --ignore-platform-reqs
+```
+
+
+4. **Laravel Sail の起動とエイリアス設定**
 
 ```bash
 ./vendor/bin/sail up -d
@@ -51,14 +62,14 @@ exec $SHELL
 
 ```
 
-4. **アプリケーションキーの生成**
+5. **アプリケーションキーの生成**
 
 ```bash
 sail artisan key:generate
 
 ```
 
-5. **データベースのマイグレーションと初期データ投入**
+6. **データベースのマイグレーションと初期データ投入**
 
 ```bash
 sail artisan migrate --seed
@@ -67,7 +78,7 @@ sail artisan migrate --seed
 
 *(※既存のデータベースをリセットしたい場合は `sail artisan migrate:fresh --seed` を実行してください)*
 
-6. **フロントエンドの依存関係インストールとビルド**
+7. **フロントエンドの依存関係インストールとビルド**
 
 ```bash
 sail npm install
@@ -77,27 +88,8 @@ sail npm run dev
 
 **注意**: `sail npm run dev` は開発サーバーを起動したままにしておく必要があります。
 
-7. **phpMyAdmin の追加（任意）**
-データベースを確認したい場合は、`compose.yaml` の `mysql` サービスの次に行を追加してください。
-
-```yaml
-phpmyadmin:
-  image: 'phpmyadmin:latest'
-  ports:
-    - '${FORWARD_PHPMYADMIN_PORT:-8080}:80'
-  environment:
-    PMA_HOST: mysql
-    PMA_USER: '${DB_USERNAME}'
-    PMA_PASSWORD: '${DB_PASSWORD}'
-  networks:
-    - sail
-  depends_on:
-    - mysql
-
-```
-
 8. **テストの実行**
-
+```
 ```bash
 sail artisan test
 
