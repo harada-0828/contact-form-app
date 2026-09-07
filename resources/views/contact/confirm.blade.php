@@ -109,10 +109,31 @@
                 </div>
 
                 <!-- hidden fields -->
+                @php
+                $rawTel = $validated['tel'] ?? '';
+    // ハイフンが含まれていれば分解、なければ文字数で3つに分割する
+    if (strpos($rawTel, '-') !== false) {
+        $telParts = explode('-', $rawTel);
+    } else {
+        if (strlen($rawTel) === 11) {
+            // 11桁の場合 (例: 09012345678 -> 090 / 1234 / 5678)
+            $telParts = [substr($rawTel, 0, 3), substr($rawTel, 3, 4), substr($rawTel, 7, 4)];
+        } elseif (strlen($rawTel) === 10) {
+            // 10桁の場合 (例: 0312345678 -> 03 / 1234 / 5678)
+            $telParts = [substr($rawTel, 0, 2), substr($rawTel, 2, 4), substr($rawTel, 6, 4)];
+        } else {
+            $telParts = [$rawTel, '', ''];
+        }
+    }
+        @endphp
+
                 <input type="hidden" name="first_name" value="{{ $validated['first_name'] }}">
                 <input type="hidden" name="last_name" value="{{ $validated['last_name'] }}">
                 <input type="hidden" name="gender" value="{{ $validated['gender'] }}">
                 <input type="hidden" name="email" value="{{ $validated['email'] }}">
+                <input type="hidden" name="tel1" value="{{ $telParts[0] ?? '' }}">
+                <input type="hidden" name="tel2" value="{{ $telParts[1] ?? '' }}">
+                <input type="hidden" name="tel3" value="{{ $telParts[2] ?? '' }}">
                 <input type="hidden" name="tel" value="{{ $validated['tel'] }}">
                 <input type="hidden" name="address" value="{{ $validated['address'] }}">
                 <input type="hidden" name="building" value="{{ $validated['building'] ?? '' }}">
@@ -125,13 +146,14 @@
                 <input type="hidden" name="detail" value="{{ $validated['detail'] }}">
 
                 <!-- ボタン -->
-                <div class="flex justify-center gap-4 mt-10">
+                <div class="flex justify-center items-center gap-4 mt-10">
                     <button type="submit"
                         class="px-16 py-3 bg-[#7d7470] hover:bg-[#6b5f57] border border-transparent rounded font-medium text-white transition">
                         送信
                     </button>
-                    <button type="button" onclick="history.back()"
-                        class="px-8 py-3 text-[#6b5744] transition">
+                    <!-- 修正ボタン -->
+                    <button type="submit" name="back" value="1"
+                        class="px-8 py-3 bg-gray-200 hover:bg-gray-300 border border-transparent rounded font-medium text-[#6b5744] transition">
                         修正
                     </button>
                 </div>

@@ -11,6 +11,28 @@ class StoreContactRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $tel1 = $this->input('tel1');
+        $tel2 = $this->input('tel2');
+        $tel3 = $this->input('tel3');
+
+        if (! empty($tel1) || ! empty($tel2) || ! empty($tel3)) {
+            $this->merge([
+                'tel' => $tel1.$tel2.$tel3,
+            ]);
+        } elseif ($this->has('tel')) {
+            $rawTel = $this->input('tel');
+            if (is_string($rawTel)) {
+
+                $cleanTel = str_replace('-', '', $rawTel);
+                $this->merge([
+                    'tel' => $cleanTel,
+                ]);
+            }
+        }
+    }
+
     public function rules(): array
     {
         return
@@ -27,7 +49,6 @@ class StoreContactRequest extends FormRequest
         ];
     }
 
-    // ★ ここを追加して、仕様書通りのエラーメッセージを定義します
     public function messages(): array
     {
         return

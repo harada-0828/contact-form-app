@@ -18,7 +18,6 @@ class ContactController extends Controller
     public function confirm(StoreContactRequest $request)
     {
         $validated = $request->validated();
-
         $category = Category::find($validated['category_id']);
 
         return view('contact.confirm', compact('validated', 'category'));
@@ -30,17 +29,23 @@ class ContactController extends Controller
             return redirect()->route('contact.index')->withInput();
         }
 
-        Contact::create([
-            'category_id' => $request->category_id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'gender' => $request->gender,
-            'email' => $request->email,
-            'tel' => $request->tel,
-            'address' => $request->address,
-            'building' => $request->building,
-            'detail' => $request->detail,
+        $validated = $request->validated();
+
+        $contact = Contact::create([
+            'category_id' => $validated['category_id'],
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'gender' => $validated['gender'],
+            'email' => $validated['email'],
+            'tel' => $validated['tel'],
+            'address' => $validated['address'],
+            'building' => $validated['building'] ?? null,
+            'detail' => $validated['detail'],
         ]);
+
+        if ($request->has('tag_ids')) {
+            $contact->tags()->sync($request->input('tag_ids'));
+        }
 
         return redirect()->route('contact.thanks');
     }

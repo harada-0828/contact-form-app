@@ -49,10 +49,11 @@ class ContactFormTest extends TestCase
             'address' => '東京都渋谷区',
             'gender' => '1',
             'category_id' => $category->id,
-            'tag_ids' => [$tag->id], // タグ選択の要件に対応
+            'tag_ids' => [$tag->id],
             'detail' => 'テストのお問い合わせ内容です。',
         ];
 
+        // 直接 /contacts へPOST
         $response = $this->post('/contacts', $formData);
 
         // データベースに保存されていること
@@ -63,7 +64,7 @@ class ContactFormTest extends TestCase
             'tel' => '09012345678',
         ]);
 
-        // /thanks へリダイレクトされること
+        // サンクスページへリダイレクトされること
         $response->assertRedirect('/thanks');
     }
 }

@@ -73,11 +73,14 @@
 
 <!-- 電話番号 -->
 @php
-    $telParts = explode('-', old('tel', ''));
+    $telValue = old('tel', '');
+    $telParts = explode('-', $telValue);
+
     $tel1 = old('tel1', $telParts[0] ?? '');
     $tel2 = old('tel2', $telParts[1] ?? '');
     $tel3 = old('tel3', $telParts[2] ?? '');
-    $combinedTel = ($tel1 && $tel2 && $tel3) ? "{$tel1}-{$tel2}-{$tel3}" : old('tel', '');
+
+    $combinedTel = ($tel1 && $tel2 && $tel3) ? "{$tel1}-{$tel2}-{$tel3}" : $telValue;
 @endphp
 <div class="grid grid-cols-3 gap-8 mb-4">
     <div class="col-span-1 flex items-center">
